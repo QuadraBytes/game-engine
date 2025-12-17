@@ -13,8 +13,7 @@ maintainer:     your@email.com
 copyright:      2025
 license:        MIT
 build-type:     Simple
-extra-source-files:
-    README.md
+
 
 source-repository head
   type: git
