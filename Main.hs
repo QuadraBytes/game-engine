@@ -5,6 +5,8 @@ module Main where
 import Web.Scotty
 import Network.Wai.Middleware.Cors
 import Network.Wai.Handler.Warp (runSettings, setPort, setHost, defaultSettings)
+import Network.Wai.Middleware.RequestLogger (logStdoutDev)
+import Control.Monad.IO.Class (liftIO)
 
 import ApiTypes
 import IOHandler
@@ -20,6 +22,9 @@ main = do
 
 app :: ScottyM ()
 app = do
+
+  -- ✅ Log every HTTP request (method, path, status)
+  middleware logStdoutDev
 
   -- ✅ CORS
   middleware $ cors $ const $ Just CorsResourcePolicy
@@ -38,8 +43,18 @@ app = do
   -- ---------------------------
   post "/guess" $ do
     req <- jsonData
+
+    -- ✅ Log request parameters
+    liftIO $
+      putStrLn $
+        "[REQUEST] POST /guess | guessValue="
+          ++ show (guessValue req)
+          ++ " | guessState="
+          ++ show (guessState req)
+
     let (res, newState) =
           runGuessAPI (guessValue req) (guessState req)
+
     json $ GuessResponse res newState
 
   -- ---------------------------
@@ -47,9 +62,24 @@ app = do
   -- ---------------------------
   post "/ttt/move" $ do
     req <- jsonData
+
+    -- ✅ Log request parameters
+    liftIO $
+      putStrLn $
+        "[REQUEST] POST /ttt/move | moveIndex="
+          ++ show (moveIndex req)
+          ++ " | tttState="
+          ++ show (tttState req)
+
     case runTTTMove (moveIndex req) (tttState req) of
-      Nothing -> text "Invalid move"
-      Just (newState, result) ->
+      Nothing -> do
+        liftIO $ putStrLn "[RESULT] Invalid TTT move"
+        text "Invalid move"
+      Just (newState, result) -> do
+        liftIO $
+          putStrLn $
+            "[RESULT] TTT result="
+              ++ show result
         json $ TTTResponse newState result
 
   -- ---------------------------
@@ -57,6 +87,16 @@ app = do
   -- ---------------------------
   post "/hangman/guess" $ do
     req <- jsonData
+
+    -- ✅ Log request parameters
+    liftIO $
+      putStrLn $
+        "[REQUEST] POST /hangman/guess | guessedLetter="
+          ++ show (guessedLetter req)
+          ++ " | hangmanState="
+          ++ show (hangmanState req)
+
     let (newState, result) =
           runHangmanAPI (guessedLetter req) (hangmanState req)
+
     json $ HangmanResponse newState result
