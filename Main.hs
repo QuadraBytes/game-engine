@@ -7,22 +7,14 @@ import Network.Wai.Middleware.Cors
 import Network.Wai.Handler.Warp (runSettings, setPort, setHost, defaultSettings)
 import Network.Wai.Middleware.RequestLogger (logStdoutDev)
 import Control.Monad.IO.Class (liftIO)
-import System.Environment (lookupEnv)
-import Text.Read (readMaybe)
 
 import ApiTypes
 import IOHandler
 
 main :: IO ()
 main = do
-  -- ✅ Read port from environment variable, default to 3000
-  portStr <- lookupEnv "PORT"
-  let port = maybe 3000 id (portStr >>= readMaybe)
-  
-  putStrLn $ "🚀 Server starting on port " ++ show port
-  
   let settings =
-        setPort port $
+        setPort 3001 $
         setHost "0.0.0.0" $
         defaultSettings
 
@@ -34,9 +26,9 @@ app = do
   -- ✅ Log every HTTP request (method, path, status)
   middleware logStdoutDev
 
-  -- ✅ CORS - Allow all origins in production or specific frontend
+  -- ✅ CORS
   middleware $ cors $ const $ Just CorsResourcePolicy
-    { corsOrigins = Nothing  -- Allow all origins, or specify your frontend URL
+   { corsOrigins = Nothing  
     , corsMethods = ["GET", "POST", "OPTIONS"]
     , corsRequestHeaders = ["Content-Type"]
     , corsExposedHeaders = Nothing
@@ -45,10 +37,6 @@ app = do
     , corsRequireOrigin = False
     , corsIgnoreFailures = False
     }
-
-  -- ✅ Health check endpoint
-  get "/health" $ do
-    json $ object ["status" .= ("ok" :: String)]
 
   -- ---------------------------
   -- Guess Game
