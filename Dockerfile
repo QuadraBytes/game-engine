@@ -36,6 +36,6 @@ RUN apt-get update && apt-get install -y \
 
 COPY --from=builder /app/bin/game-engine /app/game-engine
 
-EXPOSE 3001
+EXPOSE 3000
 
 CMD ["./game-engine"]
