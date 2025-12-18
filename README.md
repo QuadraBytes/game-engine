@@ -10,7 +10,6 @@
 ---
 
 ## 👥 Group Members
-*(Replace with your actual names & registration numbers)*
 
 - Member 1 – EG/2020/4056 - Madugalle E.W.M.W.W.N.D.B
 - Member 2 – EG/2020/4078 - Morawaliyadda M.G.H.S.M 
