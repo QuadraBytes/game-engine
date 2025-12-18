@@ -4,14 +4,24 @@ module Main where
 
 import Web.Scotty
 import Network.Wai.Middleware.Cors
+import Network.Wai.Handler.Warp (runSettings, setPort, setHost, defaultSettings)
 
 import ApiTypes
 import IOHandler
 
 main :: IO ()
-main = scotty 3001 $ do
+main = do
+  let settings =
+        setPort 3001 $
+        setHost "0.0.0.0" $
+        defaultSettings
 
-  -- ✅ Proper CORS (handles preflight OPTIONS)
+  runSettings settings =<< scottyApp app
+
+app :: ScottyM ()
+app = do
+
+  -- ✅ CORS
   middleware $ cors $ const $ Just CorsResourcePolicy
     { corsOrigins = Just (["http://localhost:3000"], True)
     , corsMethods = ["GET", "POST", "OPTIONS"]
@@ -27,7 +37,7 @@ main = scotty 3001 $ do
   -- Guess Game
   -- ---------------------------
   post "/guess" $ do
-    req <- jsonData :: ActionM GuessRequest
+    req <- jsonData
     let (res, newState) =
           runGuessAPI (guessValue req) (guessState req)
     json $ GuessResponse res newState
@@ -36,7 +46,7 @@ main = scotty 3001 $ do
   -- Tic Tac Toe
   -- ---------------------------
   post "/ttt/move" $ do
-    req <- jsonData :: ActionM TTTRequest
+    req <- jsonData
     case runTTTMove (moveIndex req) (tttState req) of
       Nothing -> text "Invalid move"
       Just (newState, result) ->
@@ -46,7 +56,7 @@ main = scotty 3001 $ do
   -- Hangman
   -- ---------------------------
   post "/hangman/guess" $ do
-    req <- jsonData :: ActionM HangmanRequest
+    req <- jsonData
     let (newState, result) =
           runHangmanAPI (guessedLetter req) (hangmanState req)
     json $ HangmanResponse newState result
