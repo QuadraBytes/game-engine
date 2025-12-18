@@ -109,3 +109,7 @@ POST `/hangman/guess`
 ## 📄 Conclusion
 
 This project demonstrates the effectiveness of **functional programming in Haskell** for building reliable backend systems with clear state transitions and strong correctness guarantees.
+
+## 🌐 Game UI
+
+Open [https://game-fp-game-ui.nqmggx.easypanel.host/](https://game-fp-game-ui.nqmggx.easypanel.host/) with your browser to see the UI.
