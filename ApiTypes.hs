@@ -6,10 +6,6 @@ import GHC.Generics (Generic)
 import Data.Aeson (FromJSON, ToJSON)
 import DataTypes
 
--- ===============================
--- Guess Game API
--- ===============================
-
 data GuessRequest = GuessRequest
   { guessValue :: Int
   , guessState :: GuessState
@@ -24,9 +20,6 @@ data GuessResponse = GuessResponse
 
 instance ToJSON GuessResponse
 
--- ===============================
--- Tic Tac Toe API
--- ===============================
 
 data TTTRequest = TTTRequest
   { moveIndex :: Int
@@ -42,9 +35,6 @@ data TTTResponse = TTTResponse
 
 instance ToJSON TTTResponse
 
--- ===============================
--- Hangman API
--- ===============================
 
 data HangmanRequest = HangmanRequest
   { guessedLetter :: Char

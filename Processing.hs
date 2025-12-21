@@ -4,9 +4,6 @@ import DataTypes
 import Utils
 import Data.Maybe (isJust)
 
--- =====================================================
--- Guess Game Logic
--- =====================================================
 processGuess :: Int -> GuessState -> (GuessResult, GuessState)
 processGuess guess state
   | guess < secret state =
@@ -16,9 +13,7 @@ processGuess guess state
   | otherwise =
       (Correct, state { attempts = attempts state + 1 })
 
--- =====================================================
--- Tic Tac Toe Logic
--- =====================================================
+
 initialBoard :: Board
 initialBoard = replicate 9 Nothing
 
@@ -53,9 +48,7 @@ checkWinner state
 
     allSame p = all (== Just p)
 
--- =====================================================
--- Hangman Logic
--- =====================================================
+
 guessLetter :: Char -> HangmanState -> HangmanState
 guessLetter c state
   | c `elem` guessed state = state

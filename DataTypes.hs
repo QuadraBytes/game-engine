@@ -5,7 +5,7 @@ module DataTypes where
 import GHC.Generics (Generic)
 import Data.Aeson (ToJSON, FromJSON)
 
--- ---------- Guess Game ----------
+-- Guess Game 
 data GuessState = GuessState
   { secret   :: Int
   , attempts :: Int
@@ -23,7 +23,7 @@ data GuessResult
 instance ToJSON GuessResult
 instance FromJSON GuessResult
 
--- ---------- Tic Tac Toe ----------
+-- Tic Tac Toe
 data Player = X | O
   deriving (Show, Eq, Generic)
 
@@ -49,7 +49,7 @@ data TTTResult
 instance ToJSON TTTResult
 instance FromJSON TTTResult
 
--- ---------- Hangman ----------
+-- Hangman
 data HangmanState = HangmanState
   { word    :: String
   , guessed :: [Char]

@@ -11,7 +11,6 @@ import IOHandler
 main :: IO ()
 main = scotty 3001 $ do
 
-  -- ✅ Proper CORS (handles preflight OPTIONS)
   middleware $ cors $ const $ Just CorsResourcePolicy
     { corsOrigins = Just (["http://localhost:3000"], True)
     , corsMethods = ["GET", "POST", "OPTIONS"]
@@ -23,18 +22,12 @@ main = scotty 3001 $ do
     , corsIgnoreFailures = False
     }
 
-  -- ---------------------------
-  -- Guess Game
-  -- ---------------------------
   post "/guess" $ do
     req <- jsonData :: ActionM GuessRequest
     let (res, newState) =
           runGuessAPI (guessValue req) (guessState req)
     json $ GuessResponse res newState
 
-  -- ---------------------------
-  -- Tic Tac Toe
-  -- ---------------------------
   post "/ttt/move" $ do
     req <- jsonData :: ActionM TTTRequest
     case runTTTMove (moveIndex req) (tttState req) of
@@ -42,9 +35,6 @@ main = scotty 3001 $ do
       Just (newState, result) ->
         json $ TTTResponse newState result
 
-  -- ---------------------------
-  -- Hangman
-  -- ---------------------------
   post "/hangman/guess" $ do
     req <- jsonData :: ActionM HangmanRequest
     let (newState, result) =
